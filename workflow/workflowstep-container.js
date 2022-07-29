@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './workflowstep-actions';
-import fuLogger from '../../core/common/fu-logger';
-import WorkflowStepView from '../../memberView/pm_workflow/workflowstep-view';
-import WorkflowStepModifyView from '../../memberView/pm_workflow/workflowstep-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import WorkflowStepView from '../../../memberView/pm/workflow/workflowstep-view';
+import WorkflowStepModifyView from '../../../memberView/pm/workflow/workflowstep-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMWorkflowStepContainer({location,navigate}) {

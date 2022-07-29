@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './testscenario-actions';
-import fuLogger from '../../core/common/fu-logger';
-import TestScenarioView from '../../memberView/pm_testscenario/testscenario-view';
-import TestScenarioModifyView from '../../memberView/pm_testscenario/testscenario-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import TestScenarioView from '../../../memberView/pm/testscenario/testscenario-view';
+import TestScenarioModifyView from '../../../memberView/pm/testscenario/testscenario-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMTestScenarioContainer({location,navigate}) {

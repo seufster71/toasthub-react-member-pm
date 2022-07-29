@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './scrum-actions';
-import fuLogger from '../../core/common/fu-logger';
-import ScrumView from '../../memberView/pm_scrum/scrum-view';
-import ScrumModifyView from '../../memberView/pm_scrum/scrum-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import ScrumView from '../../../memberView/pm/scrum/scrum-view';
+import ScrumModifyView from '../../../memberView/pm/scrum/scrum-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMScrumContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmscrum);

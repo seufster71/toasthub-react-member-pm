@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './project-actions';
-import fuLogger from '../../core/common/fu-logger';
-import ProjectView from '../../memberView/pm_project/project-view';
-import ProjectModifyView from '../../memberView/pm_project/project-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import ProjectView from '../../../memberView/pm/project/project-view';
+import ProjectModifyView from '../../../memberView/pm/project/project-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMProjectContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmproject);

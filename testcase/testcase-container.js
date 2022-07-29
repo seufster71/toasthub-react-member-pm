@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './testcase-actions';
-import fuLogger from '../../core/common/fu-logger';
-import TestCaseView from '../../memberView/pm_testcase/testcase-view';
-import TestCaseModifyView from '../../memberView/pm_testcase/testcase-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import TestCaseView from '../../../memberView/pm/testcase/testcase-view';
+import TestCaseModifyView from '../../../memberView/pm/testcase/testcase-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMTestCaseContainer({location,navigate}) {

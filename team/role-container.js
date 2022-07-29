@@ -17,12 +17,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './role-actions';
-import fuLogger from '../../core/common/fu-logger';
-import PMRoleView from '../../memberView/pm_team/role-view';
-import PMRoleModifyView from '../../memberView/pm_team/role-modify-view';
-import PMMemberRolesModifyView from '../../memberView/pm_team/member-roles-modify-view';
-import utils from '../../core/common/utils';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import PMRoleView from '../../../memberView/pm/team/role-view';
+import PMRoleModifyView from '../../../memberView/pm/team/role-modify-view';
+import PMMemberRolesModifyView from '../../../memberView/pm/team/member-roles-modify-view';
+import utils from '../../../core/common/utils';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMRoleContainer({location,navigate}) {

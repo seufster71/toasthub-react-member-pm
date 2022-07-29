@@ -17,12 +17,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './member-actions';
-import fuLogger from '../../core/common/fu-logger';
-import PMMemberView from '../../memberView/pm_team/member-view';
-import PMMemberModifyView from '../../memberView/pm_team/member-modify-view';
-import utils from '../../core/common/utils';
-import BaseContainer from '../../core/container/base-container';
-import callService from '../../core/api/api-call';
+import fuLogger from '../../../core/common/fu-logger';
+import PMMemberView from '../../../memberView/pm/team/member-view';
+import PMMemberModifyView from '../../../memberView/pm/team/member-modify-view';
+import utils from '../../../core/common/utils';
+import BaseContainer from '../../../core/container/base-container';
+import callService from '../../../core/api/api-call';
 
 
 function PMMemberContainer({location,navigate}) {

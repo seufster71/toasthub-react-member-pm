@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './task-actions';
-import fuLogger from '../../core/common/fu-logger';
-import TaskView from '../../memberView/pm_task/task-view';
-import TaskModifyView from '../../memberView/pm_task/task-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import TaskView from '../../../memberView/pm/task/task-view';
+import TaskModifyView from '../../../memberView/pm/task/task-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMTaskContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmtask);

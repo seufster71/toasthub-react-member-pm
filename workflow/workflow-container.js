@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './workflow-actions';
-import fuLogger from '../../core/common/fu-logger';
-import WorkflowView from '../../memberView/pm_workflow/workflow-view';
-import WorkflowModifyView from '../../memberView/pm_workflow/workflow-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import WorkflowView from '../../../memberView/pm/workflow/workflow-view';
+import WorkflowModifyView from '../../../memberView/pm/workflow/workflow-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMWorkflowContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmworkflow);

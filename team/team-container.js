@@ -17,12 +17,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './team-actions';
-import fuLogger from '../../core/common/fu-logger';
-import PMTeamView from '../../memberView/pm_team/team-view';
-import PMTeamModifyView from '../../memberView/pm_team/team-modify-view';
-import PMTeamLinkModifyView from '../../memberView/pm_team/team-link-modify-view';
-import utils from '../../core/common/utils';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import PMTeamView from '../../../memberView/pm/team/team-view';
+import PMTeamModifyView from '../../../memberView/pm/team/team-modify-view';
+import PMTeamLinkModifyView from '../../../memberView/pm/team/team-link-modify-view';
+import utils from '../../../core/common/utils';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMTeamContainer({location,navigate}) {

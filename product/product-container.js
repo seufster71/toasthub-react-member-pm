@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './product-actions';
-import fuLogger from '../../core/common/fu-logger';
-import ProductView from '../../memberView/pm_product/product-view';
-import ProductModifyView from '../../memberView/pm_product/product-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import ProductView from '../../../memberView/pm/product/product-view';
+import ProductModifyView from '../../../memberView/pm/product/product-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMProductContainer({location,navigate}) {
