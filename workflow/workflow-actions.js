@@ -48,7 +48,7 @@ export function init({parent,parentType}) {
 
     return callService(params).then( (responseJson) => {
     	if (responseJson != null && responseJson.protocalError == null){
-    		dispatch({ type: "LOAD_INIT_PM_WORKFLOW", responseJson });
+    		dispatch({ type: "PM_WORKFLOW_INIT", responseJson });
 		} else {
 			actionUtils.checkConnectivity(responseJson,dispatch);
 		}
@@ -101,7 +101,7 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 
 		return callService(params).then( (responseJson) => {
 			if (responseJson != null && responseJson.protocalError == null){
-				dispatch({ type: "LOAD_LIST_PM_WORKFLOW", responseJson, paginationSegment });
+				dispatch({ type: "PM_WORKFLOW_LIST", responseJson, paginationSegment });
 				if (info != null) {
 		        	  dispatch({type:'SHOW_STATUS',info:info});  
 		        }
@@ -264,5 +264,12 @@ export function openDeleteModal({item}) {
 export function closeDeleteModal() {
 	 return function(dispatch) {
 		 dispatch({type:"PM_WORKFLOW_CLOSE_DELETE_MODAL"});
+	 };
+}
+
+export function cancel({state}) {
+	return function(dispatch) {
+		dispatch({type:"PM_WORKFLOW_CANCEL"});
+		dispatch(list({state}));
 	 };
 }

@@ -107,6 +107,16 @@ function PMProjectContainer({location,navigate}) {
 				navigate(newPath,{state:{parent:item,parentType:"PROJECT"}});
 				break;
 			}
+			case 'TASK': {
+				newPath = newPath + "/pm-task";
+				navigate(newPath,{state:{parent:item,parentType:"PROJECT"}});
+				break;
+			}
+			case 'WORKFLOW': {
+				newPath = newPath + "/pm-workflow";
+				navigate(newPath,{state:{parent:item,parentType:"PROJECT"}});
+				break;
+			}
 		}
 	}
 

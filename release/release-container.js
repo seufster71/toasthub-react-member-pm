@@ -87,6 +87,11 @@ function PMReleaseContainer({location,navigate}) {
 				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
 				break;
 			}
+			case 'TASK': {
+				newPath = newPath + "/pm-task";
+				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
+				break;
+			}
 			case 'SHARE': {
 				newPath = newPath + "/pm-team";
 				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
