@@ -88,6 +88,10 @@ export default function PMDeployContainer({navigate,location}) {
 				//dispatch(actions.modifyItem({id:item.id,appPrefs,view:"SETTINGS"}));
 				break;
 			}
+			case 'TESTCASE': {
+				navigate('/member/pm-testcase',{state:{parent:item,parentType:"TESTCASE"}});
+				break;
+			}
 		}
 	}
 	

@@ -30,7 +30,11 @@ function PMTestCaseContainer({location,navigate}) {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-			dispatch(actions.init());
+		if (location.state != null && location.state.parent != null) {
+			dispatch(actions.init({parent:location.state.parent,parentType:location.state.parentType}));
+		} else {
+			dispatch(actions.init({}));
+		}
 	}, []);
 
 	const onListLimitChange = (fieldName,event) => {
@@ -66,14 +70,26 @@ function PMTestCaseContainer({location,navigate}) {
 	
 	const onOption = (code,item) => {
 		fuLogger.log({level:'TRACE',loc:'TestCaseContainer::onOption',msg:" code "+code});
-		if (BBaseContainer.onOptionBase({state:itemState,actions:actions,dispatch:dispatch,code:code,appPrefs:appPrefs,item:item})) {
+		if (BaseContainer.onOptionBase({state:itemState,actions:actions,dispatch:dispatch,code:code,appPrefs:appPrefs,item:item})) {
 			return;
 		}
-		
+		let newPath = location.pathname.substr(0, location.pathname.lastIndexOf("/"));
+		switch(code) {
+			case 'TESTSCRIPT': {
+				newPath = newPath + "/pm-testscript";
+				navigate(newPath,{state:{parent:item,parentType:"TESTCASE"}});
+				break;
+			}
+			case 'SHARE': {
+				newPath = newPath + "/pm-team";
+				navigate(newPath,{state:{parent:item,parentType:"TESTCASE"}});
+				break;
+			}
+		}
 	}
 	
 	fuLogger.log({level:'TRACE',loc:'TestCaseContainer::render',msg:"Hi there"});
-	if (itemState.isModifyOpen) {
+	if (itemState.view == "MODIFY") {
 		return (
 			<TestCaseModifyView
 			itemState={itemState}
@@ -83,7 +99,7 @@ function PMTestCaseContainer({location,navigate}) {
 			inputChange={inputChange}
 			/>
 		);
-	} else if (itemState.items != null) {
+	} else if (itemState.view == "MAIN" && itemState.items != null) {
 		return (
 			<TestCaseView
 			itemState={itemState}
@@ -96,6 +112,7 @@ function PMTestCaseContainer({location,navigate}) {
 			closeModal={closeModal}
 			onOption={onOption}
 			inputChange={inputChange}
+			goBack={goBack}
 			session={session}
 			/>
 		);

@@ -21,20 +21,28 @@ import actionUtils from '../../../core/common/action-utils';
 
 
 // thunks
-export function init() {
+export function init({parent,parentType}) {
   return function(dispatch) {
     let requestParams = {};
     requestParams.action = "INIT";
     requestParams.service = "PM_TESTCASE_SVC";
     requestParams.prefTextKeys = new Array("PM_TESTCASE_PAGE");
     requestParams.prefLabelKeys = new Array("PM_TESTCASE_PAGE");
+    if (parent != null) {
+    	if (parentType != null && parentType === "RELEASE") {
+    		requestParams.releaseId = parent.id;
+    	}
+		dispatch({type:"PM_TESTCASE_ADD_PARENT", parent, parentType});
+	} else {
+		dispatch({type:"PM_TESTCASE_CLEAR_PARENT"});
+	}
     let params = {};
     params.requestParams = requestParams;
     params.URI = '/api/member/callService';
 
     return callService(params).then( (responseJson) => {
     	if (responseJson != null && responseJson.protocalError == null){
-    		dispatch({ type: "LOAD_INIT_PM_TESTCASE", responseJson });
+    		dispatch({ type: "PM_TESTCASE_INIT", responseJson });
 		} else {
 			actionUtils.checkConnectivity(responseJson,dispatch);
 		}
@@ -45,7 +53,7 @@ export function init() {
   };
 }
 
-export function list({state,listStart,listLimit,searchCriteria,orderCriteria,info}) {
+export function list({state,listStart,listLimit,searchCriteria,orderCriteria,info,paginationSegment}) {
 	return function(dispatch) {
 		let requestParams = {};
 		requestParams.action = "LIST";
@@ -70,6 +78,9 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 		} else {
 			requestParams.orderCriteria = state.orderCriteria;
 		}
+		if (state.parent != null && state.parentType != null && state.parentType === "RELEASE") {
+			requestParams.releaseId = state.parent.id;
+		}
 		let userPrefChange = {"page":"users","orderCriteria":requestParams.orderCriteria,"listStart":requestParams.listStart,"listLimit":requestParams.listLimit};
 		dispatch({type:"PM_TESTCASE_PREF_CHANGE", userPrefChange});
 		let params = {};
@@ -78,7 +89,7 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 
 		return callService(params).then( (responseJson) => {
 			if (responseJson != null && responseJson.protocalError == null){
-				dispatch({ type: "LOAD_LIST_PM_TESTCASE", responseJson });
+				dispatch({ type: "PM_TESTCASE_LIST", responseJson });
 				if (info != null) {
 		        	  dispatch({type:'SHOW_STATUS',info:info});  
 		        }
@@ -106,13 +117,24 @@ export function search({state,searchCriteria}) {
 	 };
 }
 
+export function searchChange({field,value}) {
+	return function(dispatch) {
+		 let params = {};
+		 params.field = field;
+		 params.value = value;
+		 dispatch({ type:"PM_TESTCASE_SEARCH_CHANGE",params});
+	 };
+}
+
 export function saveItem({state}) {
 	return function(dispatch) {
 		let requestParams = {};
 	    requestParams.action = "SAVE";
 	    requestParams.service = "PM_TESTCASE_SVC";
 	    requestParams.inputFields = state.inputFields;
-
+		if (state.parent != null && state.parentType != null && state.parentType === "RELEASE") {
+			requestParams.releaseId = state.parent.id;
+		}
 	    let params = {};
 	    params.requestParams = requestParams;
 	    params.URI = '/api/member/callService';
@@ -215,4 +237,29 @@ export function clearField(field) {
 		 params.field = field;
 		dispatch({ type:"PM_TESTCASE_CLEAR_FIELD",params});
 	};
+}
+
+export function setErrors({errors}) {
+	 return function(dispatch) {
+		 dispatch({ type:"PM_TESTCASE_SET_ERRORS",errors});
+	 };
+}
+
+export function openDeleteModal({item}) {
+	 return function(dispatch) {
+		 dispatch({type:"PM_TESTCASE_OPEN_DELETE_MODAL",item});
+	 };
+}
+
+export function closeDeleteModal() {
+	 return function(dispatch) {
+		 dispatch({type:"PM_TESTCASE_CLOSE_DELETE_MODAL"});
+	 };
+}
+
+export function cancel({state}) {
+	return function(dispatch) {
+		dispatch({type:"PM_TESTCASE_CANCEL"});
+		dispatch(list({state}));
+	 };
 }

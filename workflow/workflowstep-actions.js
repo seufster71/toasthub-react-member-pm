@@ -29,9 +29,7 @@ export function init({parent,parentType}) {
     requestParams.prefTextKeys = new Array("PM_WORKFLOW_STEP_PAGE");
     requestParams.prefLabelKeys = new Array("PM_WORKFLOW_STEP_PAGE");
     if (parent != null) {
-    	if (parentType != null && parentType === "WORKFLOW") {
-    		requestParams.workflowId = parent.id;
-    	}
+    	requestParams.workflowId = parent.id;
 		dispatch({type:"PM_WORKFLOW_STEP_ADD_PARENT", parent, parentType});
 	} else {
 		dispatch({type:"PM_WORKFLOW_STEP_CLEAR_PARENT"});
@@ -78,7 +76,7 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 		} else {
 			requestParams.orderCriteria = state.orderCriteria;
 		}
-		if (state.parent != null && state.parentType != null && state.parentType === "WORKFLOW") {
+		if (state.parent != null) {
 			requestParams.workflowId = state.parent.id;
 		}
 		let userPrefChange = {"page":"users","orderCriteria":requestParams.orderCriteria,"listStart":requestParams.listStart,"listLimit":requestParams.listLimit};
@@ -123,7 +121,7 @@ export function saveItem({state}) {
 	    requestParams.action = "SAVE";
 	    requestParams.service = "PM_WORKFLOW_STEP_SVC";
 	    requestParams.inputFields = state.inputFields;
-	    if (state.parent != null && state.parentType != null && state.parentType === "WORKFLOW") {
+	    if (state.parent != null) {
 			requestParams.workflowId = state.parent.id;
 		}
 	    
@@ -264,7 +262,7 @@ export function moveSave({state,code,item}) {
 	    requestParams.moveSelectedItemId = state.moveSelectedItem.id;
 	    requestParams.itemId = item.id
 	    
-	    if (state.parent != null && state.parentType != null && state.parentType === "WORKFLOW") {
+	    if (state.parent != null) {
 			requestParams.workflowId = state.parent.id;
 		}
 	    

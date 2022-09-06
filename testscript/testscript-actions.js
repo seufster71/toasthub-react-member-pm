@@ -21,20 +21,26 @@ import actionUtils from '../../../core/common/action-utils';
 
 
 // thunks
-export function init() {
+export function init({parent,parentType}) {
   return function(dispatch) {
     let requestParams = {};
     requestParams.action = "INIT";
-    requestParams.service = "PM_TESTSCENARIO_SVC";
-    requestParams.prefTextKeys = new Array("PM_TESTSCENARIO_PAGE");
-    requestParams.prefLabelKeys = new Array("PM_TESTSCENARIO_PAGE");
+    requestParams.service = "PM_TESTSCRIPT_SVC";
+    requestParams.prefTextKeys = new Array("PM_TESTSCRIPT_PAGE");
+    requestParams.prefLabelKeys = new Array("PM_TESTSCRIPT_PAGE");
+    if (parent != null) {
+    	requestParams.parentId = parent.id;
+		dispatch({type:"PM_TESTSCRIPT_ADD_PARENT", parent, parentType});
+	} else {
+		dispatch({type:"PM_TESTSCRIPT_CLEAR_PARENT"});
+	}
     let params = {};
     params.requestParams = requestParams;
     params.URI = '/api/member/callService';
 
     return callService(params).then( (responseJson) => {
     	if (responseJson != null && responseJson.protocalError == null){
-    		dispatch({ type: "LOAD_INIT_PM_TESTSCENARIO", responseJson });
+    		dispatch({ type: "PM_TESTSCRIPT_INIT", responseJson });
 		} else {
 			actionUtils.checkConnectivity(responseJson,dispatch);
 		}
@@ -49,7 +55,7 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 	return function(dispatch) {
 		let requestParams = {};
 		requestParams.action = "LIST";
-		requestParams.service = "PM_TESTSCENARIO_SVC";
+		requestParams.service = "PM_TESTSCRIPT_SVC";
 		if (listStart != null) {
 			requestParams.listStart = listStart;
 		} else {
@@ -70,15 +76,19 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 		} else {
 			requestParams.orderCriteria = state.orderCriteria;
 		}
+		if (state.parent != null) {
+			requestParams.parentId = state.parent.id;
+		}
+		
 		let userPrefChange = {"page":"users","orderCriteria":requestParams.orderCriteria,"listStart":requestParams.listStart,"listLimit":requestParams.listLimit};
-		dispatch({type:"PM_TESTSCENARIO_PREF_CHANGE", userPrefChange});
+		dispatch({type:"PM_TESTSCRIPT_PREF_CHANGE", userPrefChange});
 		let params = {};
 		params.requestParams = requestParams;
 		params.URI = '/api/member/callService';
 
 		return callService(params).then( (responseJson) => {
 			if (responseJson != null && responseJson.protocalError == null){
-				dispatch({ type: "LOAD_LIST_PM_TESTSCENARIO", responseJson, paginationSegment });
+				dispatch({ type: "PM_TESTSCRIPT_LIST", responseJson, paginationSegment });
 				if (info != null) {
 		        	  dispatch({type:'SHOW_STATUS',info:info});  
 		        }
@@ -94,14 +104,14 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 
 export function listLimit({state,listLimit}) {
 	return function(dispatch) {
-		 dispatch({ type:"PM_TESTSCENARIO_LISTLIMIT",listLimit});
+		 dispatch({ type:"PM_TESTSCRIPT_LISTLIMIT",listLimit});
 		 dispatch(list({state,listLimit}));
 	 };
 }
 
 export function search({state,searchCriteria}) {
 	return function(dispatch) {
-		 dispatch({ type:"PM_TESTSCENARIO_SEARCH",searchCriteria});
+		 dispatch({ type:"PM_TESTSCRIPT_SEARCH",searchCriteria});
 		 dispatch(list({state,searchCriteria,listStart:0}));
 	 };
 }
@@ -110,9 +120,11 @@ export function saveItem({state}) {
 	return function(dispatch) {
 		let requestParams = {};
 	    requestParams.action = "SAVE";
-	    requestParams.service = "PM_TESTSCENARIO_SVC";
+	    requestParams.service = "PM_TESTSCRIPT_SVC";
 	    requestParams.inputFields = state.inputFields;
-
+		if (state.parent != null) {
+			requestParams.parentId = state.parent.id;
+		}
 	    let params = {};
 	    params.requestParams = requestParams;
 	    params.URI = '/api/member/callService';
@@ -138,7 +150,7 @@ export function deleteItem({state,id}) {
 	return function(dispatch) {
 	    let requestParams = {};
 	    requestParams.action = "DELETE";
-	    requestParams.service = "PM_TESTSCENARIO_SVC";
+	    requestParams.service = "PM_TESTSCRIPT_SVC";
 	    requestParams.itemId = id;
 	    
 	    let params = {};
@@ -166,8 +178,8 @@ export function modifyItem({id,appPrefs}) {
 	return function(dispatch) {
 	    let requestParams = {};
 	    requestParams.action = "ITEM";
-	    requestParams.service = "PM_TESTSCENARIO_SVC";
-	    requestParams.prefFormKeys = new Array("PM_TESTSCENARIO_FORM");
+	    requestParams.service = "PM_TESTSCRIPT_SVC";
+	    requestParams.prefFormKeys = new Array("PM_TESTSCRIPT_FORM");
 	    if (id != null) {
 	    	requestParams.itemId = id;
 	    }
@@ -177,7 +189,7 @@ export function modifyItem({id,appPrefs}) {
 
 	    return callService(params).then( (responseJson) => {
 	    	if (responseJson != null && responseJson.protocalError == null){
-	    		dispatch({ type: 'PM_TESTSCENARIO_ITEM',responseJson,appPrefs});
+	    		dispatch({ type: 'PM_TESTSCRIPT_ITEM',responseJson,appPrefs});
 	    	} else {
 	    		actionUtils.checkConnectivity(responseJson,dispatch);
 	    	}
@@ -192,20 +204,30 @@ export function inputChange(field,value) {
 		 let params = {};
 		 params.field = field;
 		 params.value = value;
-		 dispatch({ type:"PM_TESTSCENARIO_INPUT_CHANGE",params});
+		 dispatch({ type:"PM_TESTSCRIPT_INPUT_CHANGE",params});
+	 };
+}
+
+export function selectChange({action,field,value}) {
+	 return function(dispatch) {
+		 let params = {};
+		 params.action = action;
+		 params.field = field;
+		 params.value = value;
+		 dispatch({ type:"PM_TESTSCRIPT_SELECT_CHANGE",params});
 	 };
 }
 
 export function orderBy({state,orderCriteria}) {
 	 return function(dispatch) {
-		 dispatch({ type:"PM_TESTSCENARIO_ORDERBY",orderCriteria});
+		 dispatch({ type:"PM_TESTSCRIPT_ORDERBY",orderCriteria});
 		 dispatch(list({state,orderCriteria}));
 	 };
 }
 
 export function clearItem() {
 	return function(dispatch) {
-		dispatch({ type:"PM_TESTSCENARIO_CLEAR_ITEM"});
+		dispatch({ type:"PM_TESTSCRIPT_CLEAR_ITEM"});
 	};
 }
 
@@ -213,24 +235,79 @@ export function clearField(field) {
 	return function(dispatch) {
 		let params = {};
 		 params.field = field;
-		dispatch({ type:"PM_TESTSCENARIO_CLEAR_FIELD",params});
+		dispatch({ type:"PM_TESTSCRIPT_CLEAR_FIELD",params});
+	};
+}
+
+export function moveSelect({state,item}) {
+	 return function(dispatch) {
+		 dispatch({ type:"PM_TESTSCRIPT_MOVE_SELECT",item});
+		 dispatch(list({state}));
+	 };
+}
+
+export function moveCancel({state}) {
+	 return function(dispatch) {
+		 dispatch({ type:"PM_TESTSCRIPT_MOVE_CANCEL"});
+		 dispatch(list({state}));
+	 };
+}
+
+export function moveSave({state,code,item}) {
+	return function(dispatch) {
+		let requestParams = {};
+	    requestParams.action = "MOVE_SAVE";
+	    requestParams.service = "PM_TESTSCRIPT_SVC";
+	    requestParams.code = code;
+	    requestParams.moveSelectedItemId = state.moveSelectedItem.id;
+	    requestParams.itemId = item.id
+	    
+	    if (state.parent != null) {
+			requestParams.parentId = state.parent.id;
+		}
+	    
+	    let params = {};
+	    params.requestParams = requestParams;
+	    params.URI = '/api/member/callService';
+
+	    return callService(params).then( (responseJson) => {
+	    	if (responseJson != null && responseJson.protocalError == null){
+	    		if(responseJson != null && responseJson.status != null && responseJson.status == "SUCCESS"){  
+	    			dispatch({ type:"PM_TESTSCRIPT_MOVE_CANCEL"});
+	    			dispatch(list({state,info:["Save Successful"]}));
+	    		} else if (responseJson != null && responseJson.status != null && responseJson.status == "ACTIONFAILED") {
+	    			dispatch({type:'SHOW_STATUS',error:responseJson.errors});
+	    		}
+	    	} else {
+	    		actionUtils.checkConnectivity(responseJson,dispatch);
+	    	}
+	    }).catch(error => {
+	    	throw(error);
+	    });
 	};
 }
 
 export function setErrors({errors}) {
 	 return function(dispatch) {
-		 dispatch({ type:"PM_TESTSCENARIO_SET_ERRORS",errors});
+		 dispatch({ type:"PM_TESTSCRIPT_SET_ERRORS",errors});
 	 };
 }
 
 export function openDeleteModal({item}) {
 	 return function(dispatch) {
-		 dispatch({type:"PM_TESTSCENARIO_OPEN_DELETE_MODAL",item});
+		 dispatch({type:"PM_TESTSCRIPT_OPEN_DELETE_MODAL",item});
 	 };
 }
 
 export function closeDeleteModal() {
 	 return function(dispatch) {
-		 dispatch({type:"PM_TESTSCENARIO_CLOSE_DELETE_MODAL"});
+		 dispatch({type:"PM_TESTSCRIPT_CLOSE_DELETE_MODAL"});
+	 };
+}
+
+export function cancel({state}) {
+	return function(dispatch) {
+		dispatch({type:"PM_TESTSCRIPT_CANCEL"});
+		dispatch(list({state}));
 	 };
 }

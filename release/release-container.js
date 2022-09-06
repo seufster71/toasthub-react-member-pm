@@ -102,6 +102,11 @@ function PMReleaseContainer({location,navigate}) {
 				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
 				break;
 			}
+			case 'TESTCASE': {
+				newPath = newPath + "/pm-testcase";
+				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
+				break;
+			}
 		}
 	}
 	
