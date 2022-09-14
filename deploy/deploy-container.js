@@ -89,7 +89,7 @@ export default function PMDeployContainer({navigate,location}) {
 				break;
 			}
 			case 'TESTCASE': {
-				navigate('/member/pm-testcase',{state:{parent:item,parentType:"TESTCASE"}});
+				navigate('/member/pm-testcase',{state:{parent:item,parentType:"DEPLOY"}});
 				break;
 			}
 		}

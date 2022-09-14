@@ -29,8 +29,9 @@ export function init({parent,parentType}) {
     requestParams.prefTextKeys = new Array("PM_TESTCASE_PAGE");
     requestParams.prefLabelKeys = new Array("PM_TESTCASE_PAGE");
     if (parent != null) {
-    	if (parentType != null && parentType === "RELEASE") {
-    		requestParams.releaseId = parent.id;
+    	if (parentType != null && parentType === "DEPLOY") {
+    		requestParams.parentId = parent.id;
+    		requestParams.parentType = parentType;
     	}
 		dispatch({type:"PM_TESTCASE_ADD_PARENT", parent, parentType});
 	} else {
@@ -78,8 +79,9 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 		} else {
 			requestParams.orderCriteria = state.orderCriteria;
 		}
-		if (state.parent != null && state.parentType != null && state.parentType === "RELEASE") {
-			requestParams.releaseId = state.parent.id;
+		if (state.parent != null && state.parentType != null && state.parentType === "DEPLOY") {
+			requestParams.parentId = state.parent.id;
+			requestParams.parentType = state.parentType;
 		}
 		let userPrefChange = {"page":"users","orderCriteria":requestParams.orderCriteria,"listStart":requestParams.listStart,"listLimit":requestParams.listLimit};
 		dispatch({type:"PM_TESTCASE_PREF_CHANGE", userPrefChange});
@@ -132,8 +134,9 @@ export function saveItem({state}) {
 	    requestParams.action = "SAVE";
 	    requestParams.service = "PM_TESTCASE_SVC";
 	    requestParams.inputFields = state.inputFields;
-		if (state.parent != null && state.parentType != null && state.parentType === "RELEASE") {
-			requestParams.releaseId = state.parent.id;
+		if (state.parent != null && state.parentType != null && state.parentType === "DEPLOY") {
+			requestParams.parentId = state.parent.id;
+			requestParams.parentType = state.parentType;
 		}
 	    let params = {};
 	    params.requestParams = requestParams;
@@ -200,6 +203,67 @@ export function modifyItem({id,appPrefs}) {
 	    return callService(params).then( (responseJson) => {
 	    	if (responseJson != null && responseJson.protocalError == null){
 	    		dispatch({ type: 'PM_TESTCASE_ITEM',responseJson,appPrefs});
+	    	} else {
+	    		actionUtils.checkConnectivity(responseJson,dispatch);
+	    	}
+	    }).catch(error => {
+	    	throw(error);
+	    });
+	};
+}
+
+export function saveDeployLink({state}) {
+	return function(dispatch) {
+		let requestParams = {};
+	    requestParams.action = "LINK_PARENT_SAVE";
+	    requestParams.service = "PM_TESTCASE_SVC";
+	    requestParams.inputFields = state.inputFields;
+	    requestParams.parentId = state.parent.id;
+	    requestParams.itemId = state.selected.id;
+	    requestParams.parentType = state.parentType;
+
+	    let params = {};
+	    params.requestParams = requestParams;
+	    params.URI = '/api/member/callService';
+
+	    return callService(params).then( (responseJson) => {
+	    	if (responseJson != null && responseJson.protocalError == null){
+	    		if(responseJson != null && responseJson.status != null && responseJson.status == "SUCCESS"){  
+	    			dispatch(list({state,info:responseJson.infos}));
+	    		} else if (responseJson != null && responseJson.status != null && responseJson.status == "ACTIONFAILED") {
+	    			dispatch({type:'SHOW_STATUS',warn:responseJson.errors});
+	    		}
+	    	} else {
+	    		actionUtils.checkConnectivity(responseJson,dispatch);
+	    	}
+	    }).catch(error => {
+	    	throw(error);
+	    });
+	};
+}
+
+export function modifyDeployLink({item, parentType, appPrefs}) {
+	return function(dispatch) {
+	    let requestParams = {};
+	    requestParams.action = "LINK_PARENT_MODIFY";
+	    requestParams.service = "PM_TESTCASE_SVC";
+	    requestParams.prefFormKeys = new Array("PM_TESTCASE_DEPLOY_FORM");
+	    if (item != null && parentType != null) {
+	    	requestParams.parentType = parentType;
+	    	if (parentType == "DEPLOY") {
+	    		requestParams.prefFormKeys = new Array("PM_TESTCASE_DEPLOY_FORM");
+	    		if (item.testCaseDeploy != null) {
+	    			requestParams.itemId = item.testCaseDeploy.id;
+	    		}
+	    	}
+	    }
+	    let params = {};
+	    params.requestParams = requestParams;
+	    params.URI = '/api/member/callService';
+
+	    return callService(params).then( (responseJson) => {
+	    	if (responseJson != null && responseJson.protocalError == null){
+	    		dispatch({ type: 'PM_TESTCASE_LINK',responseJson, item, appPrefs, parentType});
 	    	} else {
 	    		actionUtils.checkConnectivity(responseJson,dispatch);
 	    	}

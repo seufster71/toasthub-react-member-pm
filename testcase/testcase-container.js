@@ -85,6 +85,14 @@ function PMTestCaseContainer({location,navigate}) {
 				navigate(newPath,{state:{parent:item,parentType:"TESTCASE"}});
 				break;
 			}
+			case 'MODIFY_LINK': {
+				if (item.productTeam != null) {
+					dispatch(actions.modifyDeployLink({item,parentType:itemState.parentType,appPrefs:appPrefs}));
+				} else {
+					dispatch(actions.modifyDeployLink({item,parentType:itemState.parentType,appPrefs:appPrefs}));
+				}
+				break;
+			}
 		}
 	}
 	

@@ -100,10 +100,10 @@ function PMTeamContainer({location,navigate}) {
 			}
 			case 'MODIFY_LINK': {
 				if (item.productTeam != null) {
-				dispatch(actions.modifyTeamLink({item,parentType:itemState.parentType,appPrefs:appPrefs}));
-			} else {
-				dispatch(actions.modifyTeamLink({item,parentType:itemState.parentType,appPrefs:appPrefs}));
-			}
+					dispatch(actions.modifyTeamLink({item,parentType:itemState.parentType,appPrefs:appPrefs}));
+				} else {
+					dispatch(actions.modifyTeamLink({item,parentType:itemState.parentType,appPrefs:appPrefs}));
+				}
 				break;
 			}
 		}
