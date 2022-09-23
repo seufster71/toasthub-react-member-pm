@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import reducerUtils from '../../core/common/reducer-utils';
+import reducerUtils from '../../../core/common/reducer-utils';
 
 export default function enhancementReducer(state = {}, action) {
 	let myState = {};

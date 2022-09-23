@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './sprint-actions';
-import fuLogger from '../../core/common/fu-logger';
-import SprintView from '../../memberView/pm_sprint/sprint-view';
-import SprintModifyView from '../../memberView/pm_sprint/sprint-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import SprintView from '../../../memberView/pm/sprint/sprint-view';
+import SprintModifyView from '../../../memberView/pm/sprint/sprint-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMSprintContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmsprint);

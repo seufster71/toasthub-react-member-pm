@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './defect-actions';
-import fuLogger from '../../core/common/fu-logger';
-import DefectView from '../../memberView/pm_defect/defect-view';
-import DefectModifyView from '../../memberView/pm_defect/defect-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import DefectView from '../../../memberView/pm/defect/defect-view';
+import DefectModifyView from '../../../memberView/pm/defect/defect-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMDefectContainer({location,navigate}) {

@@ -18,8 +18,8 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './backlog-actions';
 import fuLogger from '../../../core/common/fu-logger';
-import BacklogView from '../../../memberView/pm_backlog/backlog-view';
-import BacklogModifyView from '../../../memberView/pm_backlog/backlog-modify-view';
+import BacklogView from '../../../memberView/pm/backlog/backlog-view';
+import BacklogModifyView from '../../../memberView/pm/backlog/backlog-modify-view';
 import BaseContainer from '../../../core/container/base-container';
 
 

@@ -13,33 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import reducerUtils from '../../core/common/reducer-utils';
+import reducerUtils from '../../../core/common/reducer-utils';
 
 export default function workflowReducer(state = {}, action) {
 	let myState = {};
 	switch(action.type) {
-		case 'LOAD_INIT_PM_WORKFLOW_STEP': {
+		case 'PM_WORKFLOW_STEP_INIT': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				// update options for next
 				let options = [];
 				if (action.responseJson.params.items != null) {
 					for (let i = 0; i < action.responseJson.params.items.length; i++) {
 						options.push({value:action.responseJson.params.items[i].id, label:action.responseJson.params.items[i].name});
-					}
-					for (let i = 0; i < action.responseJson.params.items.length; i++) {
-						let nextStep = action.responseJson.params.items[i].nextStep;
-						if (nextStep != null && nextStep != "") {
-							let newNextStep = [];
-							let step = JSON.parse(nextStep);
-							for (let j = 0; j < step.length; j++) {
-								for (let k = 0; k < options.length; k++) {
-									if (step[j] == options[k].value) {
-										newNextStep.push(options[k].label);
-									}
-								}
-							}
-							action.responseJson.params.items[i].nextStep = JSON.stringify(newNextStep);
-						}
 					}
 				}
 				return Object.assign({}, state, {
@@ -56,8 +41,8 @@ export default function workflowReducer(state = {}, action) {
 					orderCriteria: [],
     				searchCriteria: [{'searchValue':'','searchColumn':'PM_WORKFLOW_STEP_TABLE_NAME'}],
 					selected: null,
-					isModifyOpen: false,
-					pageName:"PMPRODUCT",
+					view: "MAIN",
+					pageName:"PMWORKFLOWSTEP",
 					isDeleteModalOpen: false,
 					errors:null, 
 					warns:null, 
@@ -68,27 +53,12 @@ export default function workflowReducer(state = {}, action) {
 				return state;
 			}
 		}
-		case 'LOAD_LIST_PM_WORKFLOW_STEP': {
+		case 'PM_WORKFLOW_STEP_LIST': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				let options = [];
 				if (action.responseJson.params.items != null) {
 					for (let i = 0; i < action.responseJson.params.items.length; i++) {
 						options.push({value:action.responseJson.params.items[i].id, label:action.responseJson.params.items[i].name});
-					}
-					for (let i = 0; i < action.responseJson.params.items.length; i++) {
-						let nextStep = action.responseJson.params.items[i].nextStep;
-						if (nextStep != null && nextStep != "") {
-							let newNextStep = [];
-							let step = JSON.parse(nextStep);
-							for (let j = 0; j < step.length; j++) {
-								for (let k = 0; k < options.length; k++) {
-									if (step[j] == options[k].value) {
-										newNextStep.push(options[k].label);
-									}
-								}
-							}
-							action.responseJson.params.items[i].nextStep = JSON.stringify(newNextStep);
-						}
 					}
 				}
 				return Object.assign({}, state, {
@@ -99,7 +69,7 @@ export default function workflowReducer(state = {}, action) {
 					listStart: reducerUtils.getListStart(action),
 					paginationSegment: action.paginationSegment,
 					selected: null,
-					isModifyOpen: false,
+					view: "MAIN",
 					isDeleteModalOpen: false,
 					errors:null, 
 					warns:null, 
@@ -164,7 +134,7 @@ export default function workflowReducer(state = {}, action) {
 					prefForms: Object.assign({}, state.prefForms, reducerUtils.getPrefForms(action)),
 					selected : action.responseJson.params.item,
 					inputFields : inputFields,
-					isModifyOpen: true
+					view: "MODIFY"
 				});
 			} else {
 				return state;
@@ -176,18 +146,7 @@ export default function workflowReducer(state = {}, action) {
 		case 'PM_WORKFLOW_STEP_SELECT_CHANGE': {
 			if (action.params != null) {
 				let inputFields = Object.assign({}, state.inputFields);
-				let inputField = Object.assign([], state.inputFields[action.params.field]);
-				if (action.params.action == "ADD") {
-					if (inputField == "") {
-						inputField = [];
-					} 
-					inputField.push(action.params.value);
-					inputFields[action.params.field] = inputField;
-				} else {
-					let index = inputField.indexOf(action.params.value);
-					inputField.splice(index,1);
-					inputFields[action.params.field] = inputField;
-				}
+				inputFields[action.params.field] = action.params.value;
 				
 				let clone = Object.assign({}, state);
 				clone.inputFields = inputFields;
@@ -252,6 +211,13 @@ export default function workflowReducer(state = {}, action) {
 			return Object.assign({}, state, {
 				isDeleteModalOpen: true,
 				selected: action.item
+			});
+		}
+		case 'PM_WORKFLOW_STEP_CANCEL': {
+			return Object.assign({}, state, {
+				view: "MAIN",
+				selected:null,
+				inputFields:null
 			});
 		}
 		default:

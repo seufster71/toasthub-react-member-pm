@@ -17,12 +17,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './permission-actions';
-import fuLogger from '../../core/common/fu-logger';
-import PMPermissionView from '../../memberView/pm_team/permission-view';
-import PMPermissionModifyView from '../../memberView/pm_team/permission-modify-view';
-import PMRolePermissionModifyView from '../../memberView/pm_team/role-permission-modify-view';
-import utils from '../../core/common/utils';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import PMPermissionView from '../../../memberView/pm/team/permission-view';
+import PMPermissionModifyView from '../../../memberView/pm/team/permission-modify-view';
+import PMRolePermissionModifyView from '../../../memberView/pm/team/role-permission-modify-view';
+import utils from '../../../core/common/utils';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMPermissionContainer({location,navigate}) {

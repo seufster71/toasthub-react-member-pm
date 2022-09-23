@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import reducerUtils from '../../core/common/reducer-utils';
+import reducerUtils from '../../../core/common/reducer-utils';
 
-export default function usersReducer(state = {}, action) {
+export default function testCaseReducer(state = {}, action) {
 	let myState = {};
 	switch(action.type) {
-		case 'LOAD_INIT_PM_TESTCASE': {
+		case 'PM_TESTCASE_INIT': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				return Object.assign({}, state, {
 					prefTexts: Object.assign({}, state.prefTexts, reducerUtils.getPrefTexts(action)),
@@ -33,7 +33,7 @@ export default function usersReducer(state = {}, action) {
     				searchCriteria: [{'searchValue':'','searchColumn':'PM_TESTCASE_TABLE_NAME'}],
     				paginationSegment: 1,
 					selected: null,
-					isModifyOpen: false,
+					view: "MAIN",
 					pageName:"PMTESTCASE",
 					isDeleteModalOpen: false,
 					errors:null, 
@@ -45,7 +45,7 @@ export default function usersReducer(state = {}, action) {
 				return state;
 			}
 		}
-		case 'LOAD_LIST_PM_TESTCASE': {
+		case 'PM_TESTCASE_LIST': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				return Object.assign({}, state, {
 					itemCount: reducerUtils.getItemCount(action),
@@ -54,7 +54,7 @@ export default function usersReducer(state = {}, action) {
 					listStart: reducerUtils.getListStart(action),
 					paginationSegment: action.paginationSegment,
 					selected: null,
-					isModifyOpen: false,
+					view: "MAIN",
 					isDeleteModalOpen: false,
 					errors:null, 
 					warns:null, 
@@ -110,7 +110,7 @@ export default function usersReducer(state = {}, action) {
 					prefForms: Object.assign({}, state.prefForms, reducerUtils.getPrefForms(action)),
 					selected : action.responseJson.params.item,
 					inputFields : inputFields,
-					isModifyOpen: true
+					view: "MODIFY"
 				});
 			} else {
 				return state;
@@ -128,8 +128,27 @@ export default function usersReducer(state = {}, action) {
 		case 'PM_TESTCASE_SEARCH': { 
 			return reducerUtils.updateSearch(state,action);
 		}
+		case 'PM_TESTCASE_SEARCH_CHANGE': { 
+			return reducerUtils.updateSearchChange(state,action);
+		}
 		case 'PM_TESTCASE_ORDERBY': { 
 			return reducerUtils.updateOrderBy(state,action);
+		}
+		case 'PM_TESTCASE_ADD_PARENT': {
+			if (action.parent != null) {
+				return Object.assign({}, state, {
+					parent: action.parent,
+					parentType: action.parentType
+				});
+			} else {
+		        return state;
+		    }
+		}
+		case 'PM_TESTCASE_CLEAR_PARENT': {
+			return Object.assign({}, state, {
+				parent: null,
+				parentType: null
+			});
 		}
 		case 'PM_TESTCASE_SET_ERRORS': {
 			return Object.assign({}, state, {
@@ -145,6 +164,13 @@ export default function usersReducer(state = {}, action) {
 			return Object.assign({}, state, {
 				isDeleteModalOpen: true,
 				selected: action.item
+			});
+		}
+		case 'PM_TESTCASE_CANCEL': {
+			return Object.assign({}, state, {
+				view: "MAIN",
+				selected:null,
+				inputFields:null
 			});
 		}
 		default:

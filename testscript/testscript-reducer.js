@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import reducerUtils from '../../core/common/reducer-utils';
+import reducerUtils from '../../../core/common/reducer-utils';
 
-export default function testScenarioReducer(state = {}, action) {
+export default function testScriptReducer(state = {}, action) {
 	let myState = {};
 	switch(action.type) {
-		case 'LOAD_INIT_PM_TESTSCENARIO': {
+		case 'PM_TESTSCRIPT_INIT': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				return Object.assign({}, state, {
 					prefTexts: Object.assign({}, state.prefTexts, reducerUtils.getPrefTexts(action)),
@@ -29,12 +29,12 @@ export default function testScenarioReducer(state = {}, action) {
 					items: reducerUtils.getItems(action),
 					listLimit: reducerUtils.getListLimit(action),
 					listStart: reducerUtils.getListStart(action),
-					orderCriteria: [{'orderColumn':'PM_TESTSCENARIO_TABLE_NAME','orderDir':'ASC'}],
-    				searchCriteria: [{'searchValue':'','searchColumn':'PM_TESTSCENARIO_TABLE_NAME'}],
-    				paginationSegment: 1,
+					paginationSegment: 1,
+					orderCriteria: [],
+    				searchCriteria: [{'searchValue':'','searchColumn':'PM_TESTSCRIPT_TABLE_NAME'}],
 					selected: null,
-					isModifyOpen: false,
-					pageName:"PMTESTSCENARIO",
+					view: "MAIN",
+					pageName:"PMTESTSCRIPT",
 					isDeleteModalOpen: false,
 					errors:null, 
 					warns:null, 
@@ -45,7 +45,7 @@ export default function testScenarioReducer(state = {}, action) {
 				return state;
 			}
 		}
-		case 'LOAD_LIST_PM_TESTSCENARIO': {
+		case 'PM_TESTSCRIPT_LIST': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				return Object.assign({}, state, {
 					itemCount: reducerUtils.getItemCount(action),
@@ -54,7 +54,7 @@ export default function testScenarioReducer(state = {}, action) {
 					listStart: reducerUtils.getListStart(action),
 					paginationSegment: action.paginationSegment,
 					selected: null,
-					isModifyOpen: false,
+					view: "MAIN",
 					isDeleteModalOpen: false,
 					errors:null, 
 					warns:null, 
@@ -64,20 +64,20 @@ export default function testScenarioReducer(state = {}, action) {
 				return state;
 			}
 		}
-		case 'PM_TESTSCENARIO_ITEM': {
+		case 'PM_TESTSCRIPT_ITEM': {
 			if (action.responseJson !=  null && action.responseJson.params != null) {
 				// load inputFields
 				let inputFields = {};
 				let prefForms = reducerUtils.getPrefForms(action);
-				for (let i = 0; i < prefForms.PM_TESTSCENARIO_FORM.length; i++) {
-					if (prefForms.PM_TESTSCENARIO_FORM[i].group === "FORM1") {
-						let classModel = JSON.parse(prefForms.PM_TESTSCENARIO_FORM[i].classModel);
+				for (let i = 0; i < prefForms.PM_TESTSCRIPT_FORM.length; i++) {
+					if (prefForms.PM_TESTSCRIPT_FORM[i].group === "FORM1") {
+						let classModel = JSON.parse(prefForms.PM_TESTSCRIPT_FORM[i].classModel);
 						if (action.responseJson.params.item != null && action.responseJson.params.item[classModel.field]) {
-							inputFields[prefForms.PM_TESTSCENARIO_FORM[i].name] = action.responseJson.params.item[classModel.field];
+							inputFields[prefForms.PM_TESTSCRIPT_FORM[i].name] = action.responseJson.params.item[classModel.field];
 						} else {
 							let result = "";
-							if (prefForms.PM_TESTSCENARIO_FORM[i].value != null && prefForms.PM_TESTSCENARIO_FORM[i].value != ""){
-								let formValue = JSON.parse(prefForms.PM_TESTSCENARIO_FORM[i].value);
+							if (prefForms.PM_TESTSCRIPT_FORM[i].value != null && prefForms.PM_TESTSCRIPT_FORM[i].value != ""){
+								let formValue = JSON.parse(prefForms.PM_TESTSCRIPT_FORM[i].value);
 								if (formValue.options != null) {
 									for (let j = 0; j < formValue.options.length; j++) {
 										if (formValue.options[j] != null && formValue.options[j].defaultInd == true){
@@ -98,7 +98,7 @@ export default function testScenarioReducer(state = {}, action) {
 									}
 								}
 							}
-							inputFields[prefForms.PM_TESTSCENARIO_FORM[i].name] = result;
+							inputFields[prefForms.PM_TESTSCRIPT_FORM[i].name] = result;
 						}
 					}
 				}
@@ -110,41 +110,90 @@ export default function testScenarioReducer(state = {}, action) {
 					prefForms: Object.assign({}, state.prefForms, reducerUtils.getPrefForms(action)),
 					selected : action.responseJson.params.item,
 					inputFields : inputFields,
-					isModifyOpen: true
+					view: "MODIFY"
 				});
 			} else {
 				return state;
 			}
 		}
-		case 'PM_TESTSCENARIO_INPUT_CHANGE': {
+		case 'PM_TESTSCRIPT_INPUT_CHANGE': {
 			return reducerUtils.updateInputChange(state,action);
 		}
-		case 'PM_TESTSCENARIO_CLEAR_FIELD': {
+		case 'PM_TESTSCRIPT_SELECT_CHANGE': {
+			if (action.params != null) {
+				let inputFields = Object.assign({}, state.inputFields);
+				inputFields[action.params.field] = action.params.value;
+				
+				let clone = Object.assign({}, state);
+				clone.inputFields = inputFields;
+				return clone;
+			} else {
+		        return state;
+		    }
+		}
+		case 'PM_TESTSCRIPT_CLEAR_FIELD': {
 			return reducerUtils.updateClearField(state,action);
 		}
-		case 'PM_TESTSCENARIO_LISTLIMIT': {
+		case 'PM_TESTSCRIPT_LISTLIMIT': {
 			return reducerUtils.updateListLimit(state,action);
 		}
-		case 'PM_TESTSCENARIO_SEARCH': { 
+		case 'PM_TESTSCRIPT_SEARCH': { 
 			return reducerUtils.updateSearch(state,action);
 		}
-		case 'PM_TESTSCENARIO_ORDERBY': { 
+		case 'PM_TESTSCRIPT_ORDERBY': { 
 			return reducerUtils.updateOrderBy(state,action);
 		}
-		case 'PM_TESTSCENARIO_SET_ERRORS': {
+		case 'PM_TESTSCRIPT_ADD_PARENT': {
+			if (action.parent != null) {
+				return Object.assign({}, state, {
+					parent: action.parent,
+					parentType: action.parentType
+				});
+			} else {
+		        return state;
+		    }
+		}
+		case 'PM_TESTSCRIPT_CLEAR_PARENT': {
+			return Object.assign({}, state, {
+				parent: null,
+				parentType: null
+			});
+		}
+		case 'PM_TESTSCRIPT_MOVE_SELECT': {
+			if (action.item != null) {
+				return Object.assign({}, state, {
+					moveSelectedItem: action.item
+				});
+			} else {
+		        return state;
+		    }
+		}
+		case 'PM_TESTSCRIPT_MOVE_CANCEL': {
+			return Object.assign({}, state, {
+				moveSelectedItem: null
+			});
+		}
+		case 'PM_TESTSCRIPT_SET_ERRORS': {
 			return Object.assign({}, state, {
 				errors: action.errors
 			});
 		}
-		case 'PM_TESTSCENARIO_CLOSE_DELETE_MODAL': {
+		case 'PM_TESTSCRIPT_CLOSE_DELETE_MODAL': {
 			return Object.assign({}, state, {
 				isDeleteModalOpen: false
 			});
 		}
-		case 'PM_TESTSCENARIO_OPEN_DELETE_MODAL': {
+		case 'PM_TESTSCRIPT_OPEN_DELETE_MODAL': {
 			return Object.assign({}, state, {
 				isDeleteModalOpen: true,
 				selected: action.item
+			});
+		}
+		case 'PM_TESTSCRIPT_CANCEL': {
+			return Object.assign({}, state, {
+				view: "MAIN",
+				selected:null,
+				inputFields:null
 			});
 		}
 		default:

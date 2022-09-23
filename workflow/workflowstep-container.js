@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './workflowstep-actions';
-import fuLogger from '../../core/common/fu-logger';
-import WorkflowStepView from '../../memberView/pm_workflow/workflowstep-view';
-import WorkflowStepModifyView from '../../memberView/pm_workflow/workflowstep-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import WorkflowStepView from '../../../memberView/pm/workflow/workflowstep-view';
+import WorkflowStepModifyView from '../../../memberView/pm/workflow/workflowstep-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMWorkflowStepContainer({location,navigate}) {
@@ -31,9 +31,9 @@ function PMWorkflowStepContainer({location,navigate}) {
 	
 	useEffect(() => {
 		if (location.state != null && location.state.parent != null) {
-			dispatch(actions.init(location.state.parent,location.state.parentType));
+			dispatch(actions.init({parent:location.state.parent,parentType:location.state.parentType}));
 		} else {
-			dispatch(actions.init());
+			dispatch(actions.init({}));
 		}
 	}, []);
 
@@ -123,10 +123,9 @@ function PMWorkflowStepContainer({location,navigate}) {
 
 
 	fuLogger.log({level:'TRACE',loc:'WorkflowStepContainer::render',msg:"Hi there"});
-	if (itemState.isModifyOpen) {
+	if (itemState.view == "MODIFY") {
 		return (
 			<WorkflowStepModifyView
-			containerState={this.state}
 			itemState={itemState}
 			appPrefs={appPrefs}
 			onSave={onSave}
@@ -134,19 +133,17 @@ function PMWorkflowStepContainer({location,navigate}) {
 			onReturn={onCancel}
 			inputChange={inputChange}
 			selectChange={selectChange}
-			onBlur={onBlur}/>
+			/>
 		);
-	} else if (itemState.items != null) {
+	} else if (itemState.view == "MAIN" && itemState.items != null) {
 		return (
 			<WorkflowStepView
-			containerState={this.state}
 			itemState={itemState}
 			appPrefs={appPrefs}
 			onListLimitChange={onListLimitChange}
 			onSearchChange={onSearchChange}
 			onSearchClick={onSearchClick}
 			onPaginationClick={onPaginationClick}
-			onOrderBy={onOrderBy}
 			closeModal={closeModal}
 			onOption={onOption}
 			inputChange={inputChange}

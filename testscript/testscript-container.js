@@ -16,21 +16,25 @@
 'use-strict';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import * as actions from './testscenario-actions';
-import fuLogger from '../../core/common/fu-logger';
-import TestScenarioView from '../../memberView/pm_testscenario/testscenario-view';
-import TestScenarioModifyView from '../../memberView/pm_testscenario/testscenario-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import * as actions from './testscript-actions';
+import fuLogger from '../../../core/common/fu-logger';
+import TestScriptView from '../../../memberView/pm/testscript/testscript-view';
+import TestScriptModifyView from '../../../memberView/pm/testscript/testscript-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
-function PMTestScenarioContainer({location,navigate}) {
-	const itemState = useSelector((state) => state.pmtestscenario);
+function PMTestScriptContainer({location,navigate}) {
+	const itemState = useSelector((state) => state.pmtestscript);
 	const session = useSelector((state) => state.session);
 	const appPrefs = useSelector((state) => state.appPrefs);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-			dispatch(actions.init());
+		if (location.state != null && location.state.parent != null) {
+			dispatch(actions.init({parent:location.state.parent,parentType:location.state.parentType}));
+		} else {
+			dispatch(actions.init({}));
+		}
 	}, []);
 	
 	const onListLimitChange = (fieldName,event) => {
@@ -52,7 +56,7 @@ function PMTestScenarioContainer({location,navigate}) {
 		BaseContainer.onOrderBy({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,selectedOption,event});
 	}
 	const onSave = () => {
-		BaseContainer.onSave({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,form:"PM_TESTSCENARIO_FORM"});
+		BaseContainer.onSave({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,form:"PM_TESTSCRIPT_FORM"});
 	}
 	const closeModal = () => {
 		BaseContainer.closeModal({actions:actions,dispatch:dispatch});
@@ -64,18 +68,64 @@ function PMTestScenarioContainer({location,navigate}) {
 		BaseContainer.goBack({navigate});
 	}
 	
-
-	const onOption = (code,item) => {
-		fuLogger.log({level:'TRACE',loc:'TestScenarioContainer::onOption',msg:" code "+code});
-		if (BaseContainer.onOptionBase({state:itemState,actions:actions,dispatch:dispatch,code:code,appPrefs:appPrefs,item:item})) {
-			return;
+	const onMoveSelect = (item) => {
+		fuLogger.log({level:'TRACE',loc:'WorkflowStepContainer::onMoveSelect',msg:"test"});
+		if (item != null) {
+			dispatch(actions.moveSelect({state:itemState,item}));
 		}
 	}
 	
-	fuLogger.log({level:'TRACE',loc:'TestScenarioContainer::render',msg:"Hi there"});
-	if (itemState.isModifyOpen) {
+	const onMoveSave = (code,item) => {
+		fuLogger.log({level:'TRACE',loc:'WorkflowStepContainer::onMoveSave',msg:"test"});
+		if (item != null) {
+			dispatch(actions.moveSave({state:itemState,code,item}));
+		}
+	}
+	
+	const onMoveCancel = () => {
+		fuLogger.log({level:'TRACE',loc:'WorkflowStepContainer::onMoveCancel',msg:"test"});
+		dispatch(actions.moveCancel({state:itemState}));
+	}
+
+	const onOption = (code,item) => {
+		fuLogger.log({level:'TRACE',loc:'TestScriptContainer::onOption',msg:" code "+code});
+		if (BaseContainer.onOptionBase({state:itemState,actions:actions,dispatch:dispatch,code:code,appPrefs:appPrefs,item:item})) {
+			return;
+		}
+		
+		switch(code) {
+			case 'MOVESELECT': {
+				onMoveSelect(item);
+				break;
+			}
+			case 'MOVEABOVE': {
+				onMoveSave(code,item);
+				break;
+			}
+			case 'MOVEBELOW': {
+				onMoveSave(code,item);
+				break;
+			}
+			case 'MOVECANCEL': {
+				onMoveCancel();
+				break;
+			}
+		}
+	}
+	
+	const selectChange = (selected,event) => {
+		if (event.action == "remove-value") {
+			dispatch(actions.selectChange("REMOVE",event.name,event.removedValue.value));
+		} else if (event.action == "select-option" ) {
+			dispatch(actions.selectChange("ADD",event.name,event.option.value));
+		}
+	}
+	
+	
+	fuLogger.log({level:'TRACE',loc:'TestScriptContainer::render',msg:"Hi there"});
+	if (itemState.view == "MODIFY") {
 		return (
-			<TestScenarioModifyView
+			<TestScriptModifyView
 			itemState={itemState}
 			appPrefs={appPrefs}
 			onSave={onSave}
@@ -83,19 +133,19 @@ function PMTestScenarioContainer({location,navigate}) {
 			inputChange={inputChange}
 			/>
 		);
-	} else if (itemState.items != null) {
+	} else if (itemState.view == "MAIN" && itemState.items != null) {
 		return (
-			<TestScenarioView
+			<TestScriptView
 			itemState={itemState}
 			appPrefs={appPrefs}
 			onListLimitChange={onListLimitChange}
 			onSearchChange={onSearchChange}
 			onSearchClick={onSearchClick}
 			onPaginationClick={onPaginationClick}
-			onOrderBy={onOrderBy}
 			closeModal={closeModal}
 			onOption={onOption}
 			inputChange={inputChange}
+			goBack={goBack}
 			session={session}
 			/>
 		);
@@ -104,4 +154,4 @@ function PMTestScenarioContainer({location,navigate}) {
 	}
 }
 
-export default PMTestScenarioContainer;
+export default PMTestScriptContainer;
