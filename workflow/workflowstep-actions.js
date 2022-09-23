@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import callService from '../../core/api/api-call';
-import actionUtils from '../../core/common/action-utils';
+import callService from '../../../core/api/api-call';
+import actionUtils from '../../../core/common/action-utils';
 
 // action helpers
 
@@ -29,9 +29,7 @@ export function init({parent,parentType}) {
     requestParams.prefTextKeys = new Array("PM_WORKFLOW_STEP_PAGE");
     requestParams.prefLabelKeys = new Array("PM_WORKFLOW_STEP_PAGE");
     if (parent != null) {
-    	if (parentType != null && parentType === "WORKFLOW") {
-    		requestParams.workflowId = parent.id;
-    	}
+    	requestParams.workflowId = parent.id;
 		dispatch({type:"PM_WORKFLOW_STEP_ADD_PARENT", parent, parentType});
 	} else {
 		dispatch({type:"PM_WORKFLOW_STEP_CLEAR_PARENT"});
@@ -42,7 +40,7 @@ export function init({parent,parentType}) {
 
     return callService(params).then( (responseJson) => {
     	if (responseJson != null && responseJson.protocalError == null){
-    		dispatch({ type: "LOAD_INIT_PM_WORKFLOW_STEP", responseJson });
+    		dispatch({ type: "PM_WORKFLOW_STEP_INIT", responseJson });
 		} else {
 			actionUtils.checkConnectivity(responseJson,dispatch);
 		}
@@ -78,7 +76,7 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 		} else {
 			requestParams.orderCriteria = state.orderCriteria;
 		}
-		if (state.parent != null && state.parentType != null && state.parentType === "WORKFLOW") {
+		if (state.parent != null) {
 			requestParams.workflowId = state.parent.id;
 		}
 		let userPrefChange = {"page":"users","orderCriteria":requestParams.orderCriteria,"listStart":requestParams.listStart,"listLimit":requestParams.listLimit};
@@ -89,7 +87,7 @@ export function list({state,listStart,listLimit,searchCriteria,orderCriteria,inf
 
 		return callService(params).then( (responseJson) => {
 			if (responseJson != null && responseJson.protocalError == null){
-				dispatch({ type: "LOAD_LIST_PM_WORKFLOW_STEP", responseJson, paginationSegment });
+				dispatch({ type: "PM_WORKFLOW_STEP_LIST", responseJson, paginationSegment });
 				if (info != null) {
 		        	  dispatch({type:'SHOW_STATUS',info:info});  
 		        }
@@ -123,7 +121,7 @@ export function saveItem({state}) {
 	    requestParams.action = "SAVE";
 	    requestParams.service = "PM_WORKFLOW_STEP_SVC";
 	    requestParams.inputFields = state.inputFields;
-	    if (state.parent != null && state.parentType != null && state.parentType === "WORKFLOW") {
+	    if (state.parent != null) {
 			requestParams.workflowId = state.parent.id;
 		}
 	    
@@ -210,7 +208,7 @@ export function inputChange(field,value) {
 	 };
 }
 
-export function selectChange(action,field,value) {
+export function selectChange({action,field,value}) {
 	 return function(dispatch) {
 		 let params = {};
 		 params.action = action;
@@ -264,7 +262,7 @@ export function moveSave({state,code,item}) {
 	    requestParams.moveSelectedItemId = state.moveSelectedItem.id;
 	    requestParams.itemId = item.id
 	    
-	    if (state.parent != null && state.parentType != null && state.parentType === "WORKFLOW") {
+	    if (state.parent != null) {
 			requestParams.workflowId = state.parent.id;
 		}
 	    
@@ -304,5 +302,12 @@ export function openDeleteModal({item}) {
 export function closeDeleteModal() {
 	 return function(dispatch) {
 		 dispatch({type:"PM_WORKFLOW_STEP_CLOSE_DELETE_MODAL"});
+	 };
+}
+
+export function cancel({state}) {
+	return function(dispatch) {
+		dispatch({type:"PM_WORKFLOW_STEP_CANCEL"});
+		dispatch(list({state}));
 	 };
 }

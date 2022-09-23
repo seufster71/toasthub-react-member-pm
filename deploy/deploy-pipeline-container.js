@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './deploy-pipeline-actions';
-import fuLogger from '../../core/common/fu-logger';
-import DeployPipelineView from '../../memberView/pm_deploy/deploy-pipeline-view';
-import DeployPipelineModifyView from '../../memberView/pm_deploy/deploy-pipeline-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import DeployPipelineView from '../../../memberView/pm/deploy/deploy-pipeline-view';
+import DeployPipelineModifyView from '../../../memberView/pm/deploy/deploy-pipeline-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 export default function PMDeployPipelineContainer({navigate,location}) {

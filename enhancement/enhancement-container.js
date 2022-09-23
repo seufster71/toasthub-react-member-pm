@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './enhancement-actions';
-import fuLogger from '../../core/common/fu-logger';
-import EnhancementView from '../../memberView/pm_enhancement/enhancement-view';
-import EnhancementModifyView from '../../memberView/pm_enhancement/enhancement-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import EnhancementView from '../../../memberView/pm/enhancement/enhancement-view';
+import EnhancementModifyView from '../../../memberView/pm/enhancement/enhancement-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMEnhancementContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmenhancement);

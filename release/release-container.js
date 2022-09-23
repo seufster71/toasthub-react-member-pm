@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './release-actions';
-import fuLogger from '../../core/common/fu-logger';
-import ReleaseView from '../../memberView/pm_release/release-view';
-import ReleaseModifyView from '../../memberView/pm_release/release-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import ReleaseView from '../../../memberView/pm/release/release-view';
+import ReleaseModifyView from '../../../memberView/pm/release/release-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMReleaseContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmrelease);
@@ -87,6 +87,11 @@ function PMReleaseContainer({location,navigate}) {
 				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
 				break;
 			}
+			case 'TASK': {
+				newPath = newPath + "/pm-task";
+				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
+				break;
+			}
 			case 'SHARE': {
 				newPath = newPath + "/pm-team";
 				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
@@ -94,6 +99,11 @@ function PMReleaseContainer({location,navigate}) {
 			}
 			case 'SCRUM': {
 				newPath = newPath + "/pm-scrum";
+				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
+				break;
+			}
+			case 'TESTCASE': {
+				newPath = newPath + "/pm-testcase";
 				navigate(newPath,{state:{parent:item,parentType:"RELEASE"}});
 				break;
 			}

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import reducerUtils from '../../core/common/reducer-utils';
+import reducerUtils from '../../../core/common/reducer-utils';
 
 export default function workflowReducer(state = {}, action) {
 	switch(action.type) {
-		case 'LOAD_INIT_PM_WORKFLOW': {
+		case 'PM_WORKFLOW_INIT': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				return Object.assign({}, state, {
 					prefTexts: Object.assign({}, state.prefTexts, reducerUtils.getPrefTexts(action)),
@@ -32,8 +32,8 @@ export default function workflowReducer(state = {}, action) {
     				searchCriteria: [{'searchValue':'','searchColumn':'PM_WORKFLOW_TABLE_NAME'}],
     				paginationSegment: 1,
 					selected: null,
-					isModifyOpen: false,
-					pageName:"PMPRODUCT",
+					view: "MAIN",
+					pageName:"PMWORKFLOW",
 					isDeleteModalOpen: false,
 					errors:null, 
 					warns:null, 
@@ -44,7 +44,7 @@ export default function workflowReducer(state = {}, action) {
 				return state;
 			}
 		}
-		case 'LOAD_LIST_PM_WORKFLOW': {
+		case 'PM_WORKFLOW_LIST': {
 			if (action.responseJson != null && action.responseJson.params != null) {
 				return Object.assign({}, state, {
 					itemCount: reducerUtils.getItemCount(action),
@@ -53,7 +53,7 @@ export default function workflowReducer(state = {}, action) {
 					listStart: reducerUtils.getListStart(action),
 					paginationSegment: action.paginationSegment,
 					selected: null,
-					isModifyOpen: false,
+					view: "MAIN",
 					isDeleteModalOpen: false,
 					errors:null, 
 					warns:null, 
@@ -114,7 +114,7 @@ export default function workflowReducer(state = {}, action) {
 					prefForms: Object.assign({}, state.prefForms, reducerUtils.getPrefForms(action)),
 					selected : action.responseJson.params.item,
 					inputFields : inputFields,
-					isModifyOpen: true
+					view: "MODIFY"
 				});
 			} else {
 				return state;
@@ -165,6 +165,13 @@ export default function workflowReducer(state = {}, action) {
 			return Object.assign({}, state, {
 				isDeleteModalOpen: true,
 				selected: action.item
+			});
+		}
+		case 'PM_WORKFLOW_CANCEL': {
+			return Object.assign({}, state, {
+				view: "MAIN",
+				selected:null,
+				inputFields:null
 			});
 		}
 		default:

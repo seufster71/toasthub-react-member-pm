@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './workflow-actions';
-import fuLogger from '../../core/common/fu-logger';
-import WorkflowView from '../../memberView/pm_workflow/workflow-view';
-import WorkflowModifyView from '../../memberView/pm_workflow/workflow-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import WorkflowView from '../../../memberView/pm/workflow/workflow-view';
+import WorkflowModifyView from '../../../memberView/pm/workflow/workflow-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 function PMWorkflowContainer({location,navigate}) {
 	const itemState = useSelector((state) => state.pmworkflow);
@@ -30,9 +30,9 @@ function PMWorkflowContainer({location,navigate}) {
 	
 	useEffect(() => {
 		if (location.state != null && location.state.parent != null) {
-			dispatch(actions.init(location.state.parent,location.state.parentType));
+			dispatch(actions.init({parent:location.state.parent,parentType:location.state.parentType}));
 		} else {
-			dispatch(actions.init());
+			dispatch(actions.init({}));
 		}
 	}, []);
 
@@ -83,7 +83,7 @@ function PMWorkflowContainer({location,navigate}) {
 	}
 
 	fuLogger.log({level:'TRACE',loc:'WorkflowContainer::render',msg:"Hi there"});
-	if (itemState.isModifyOpen) {
+	if (itemState.view == "MODIFY") {
 		return (
 			<WorkflowModifyView
 			itemState={itemState}
@@ -93,7 +93,7 @@ function PMWorkflowContainer({location,navigate}) {
 			inputChange={inputChange}
 			/>
 		);
-	} else if (itemState.items != null) {
+	} else if (itemState.view == "MAIN" && itemState.items != null) {
 		return (
 			<WorkflowView
 			itemState={itemState}

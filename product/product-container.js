@@ -17,10 +17,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './product-actions';
-import fuLogger from '../../core/common/fu-logger';
-import ProductView from '../../memberView/pm_product/product-view';
-import ProductModifyView from '../../memberView/pm_product/product-modify-view';
-import BaseContainer from '../../core/container/base-container';
+import fuLogger from '../../../core/common/fu-logger';
+import ProductView from '../../../memberView/pm/product/product-view';
+import ProductModifyView from '../../../memberView/pm/product/product-modify-view';
+import BaseContainer from '../../../core/container/base-container';
 
 
 function PMProductContainer({location,navigate}) {
@@ -103,6 +103,11 @@ function PMProductContainer({location,navigate}) {
 			}
 			case 'SCRUM': {
 				newPath = newPath + "/pm-scrum";
+				navigate(newPath,{state:{parent:item,parentType:"PRODUCT"}});
+				break;
+			}
+			case 'TASK': {
+				newPath = newPath + "/pm-task";
 				navigate(newPath,{state:{parent:item,parentType:"PRODUCT"}});
 				break;
 			}
